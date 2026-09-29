@@ -5,6 +5,13 @@
 class BootScene extends Phaser.Scene {
   constructor() { super('Boot'); }
 
+  preload() {
+    // Imágenes reales opcionales (ver src/data/assets.js). Si falla la carga, se usa el dibujo.
+    Object.keys(PRODUCT_IMAGES).forEach(id => this.load.image('prod_' + id, PRODUCT_IMAGES[id]));
+    if (LOGO_IMAGE) this.load.image('safecoin', LOGO_IMAGE);
+    this.load.on('loaderror', f => console.warn('No se pudo cargar', f.key));
+  }
+
   create() {
     // Operarios de pie con distintos chalecos
     makeWorkerTexture(this, 'worker_orange', 0xf58220);

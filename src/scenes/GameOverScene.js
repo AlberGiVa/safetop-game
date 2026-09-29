@@ -35,7 +35,7 @@ class GameOverScene extends Phaser.Scene {
     // Safecoins ganados
     const c = this.add.container(W / 2, 530);
     const bg = this.add.graphics(); bg.fillStyle(BRAND.navy2); bg.fillRoundedRect(-170, -36, 340, 72, 18);
-    const ic = this.add.image(-120, 0, 'safecoin').setScale(0.9);
+    const ic = coinImage(this, -120, 0, 40);
     const t = this.add.text(-85, 0, '+' + coins + ' Safecoins' + (isRecord ? '  (bono récord)' : ''), { fontFamily: FONT, fontSize: '20px', fontStyle: 'bold', color: CSS.yellow }).setOrigin(0, 0.5);
     c.add([bg, ic, t]).setScale(0);
     this.tweens.add({ targets: c, scale: 1, duration: 400, delay: 600, ease: 'Back.out', onStart: () => Sfx.coin() });

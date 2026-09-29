@@ -75,7 +75,7 @@ class AlmacenScene extends Phaser.Scene {
       const owned = Wallet.has(id);
       const card = this.add.image(x0, y, owned ? 'shopcard_owned' : 'shopcard');
       const left = x0 - cardW / 2;
-      const icon = this.add.image(left + 55, y - 10, 'prod_' + id).setScale(0.85);
+      const icon = productImage(this, left + 55, y - 10, id, 76);
       const name = this.add.text(left + 110, y - 58, p.name, { fontFamily: FONT, fontSize: '19px', fontStyle: 'bold', color: CSS.white });
       const norm = this.add.text(left + 110, y - 34, (p.ref ? 'Ref. ' + p.ref + ' · ' : '') + p.norm, { fontFamily: FONT, fontSize: '12px', color: CSS.blue ? '#2bb0e6' : CSS.grey });
       const desc = this.add.text(left + 110, y - 16, p.desc, { fontFamily: FONT, fontSize: '12px', color: CSS.grey, wordWrap: { width: 370 } });
@@ -95,7 +95,7 @@ class AlmacenScene extends Phaser.Scene {
         this.listObjs.push(tag);
       } else {
         const btn = makeButton(this, left + 55, y + 50, 96, 34, p.price + ' ', BRAND.orange, () => this.tryBuy(id), 16);
-        const c = this.add.image(left + 80, y + 50, 'safecoin').setScale(0.45);
+        const c = coinImage(this, left + 80, y + 50, 20);
         this.listObjs.push(btn.img, btn.txt, c);
       }
       y += cardH + 14;

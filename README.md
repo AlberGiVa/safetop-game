@@ -47,10 +47,18 @@ Para cambiar productos, precios, textos o dificultad basta con editar `src/data/
 
 ## Sustituir gráficos por fotos reales
 
-Ahora mismo todos los gráficos se dibujan por código (`src/utils.js`). Para usar fotos de producto:
-1. Sube las imágenes a `assets/` (PNG con fondo transparente, ~200 px).
-2. En `BootScene.js` cárgalas con `this.load.image('prod_oxylux', 'assets/oxylux.png')` dentro de un método `preload()`.
-3. Como las claves de textura ya son `prod_<id>`, el resto del juego las usará automáticamente.
+Todos los gráficos se dibujan por código, pero el juego está preparado para fotos reales:
+1. Sube la imagen a `assets/products/` (PNG con fondo transparente, ~200x220 px).
+2. En `src/data/assets.js` añade una línea: `nitqrolux: 'assets/products/nitqrolux.png',`
+3. Para el logo de Safetop (icono de Safecoin): `const LOGO_IMAGE = 'assets/logo.png';`
+
+Si una imagen falla al cargar, el juego sigue usando el dibujo.
+
+## Editar desde el móvil
+
+1. App de GitHub → repositorio → archivo → ✏️ *Edit* → *Commit changes*.
+2. En un minuto GitHub Pages vuelve a publicar el juego (pestaña *Actions*).
+3. Si el móvil muestra la versión antigua, cierra la pestaña y vuelve a abrir la URL (el modo offline guarda una copia).
 
 ## Publicar en las tiendas (Capacitor)
 

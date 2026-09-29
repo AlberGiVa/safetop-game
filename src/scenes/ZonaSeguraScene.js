@@ -92,7 +92,7 @@ class ZonaSeguraScene extends Phaser.Scene {
       const x = xs[i % cols], y = ys[Math.floor(i / cols)];
       const c = this.add.container(x, y).setDepth(10);
       const panel = this.add.image(0, 0, 'glovebtn');
-      const img = this.add.image(0, -22, 'prod_' + glove.id).setScale(0.8);
+      const img = productImage(this, 0, -22, glove.id, 72);
       const name = this.add.text(0, 36, glove.name, { fontFamily: FONT, fontSize: '15px', fontStyle: 'bold', color: CSS.white }).setOrigin(0.5);
       const desc = this.add.text(0, 56, TASKS[glove.task].emoji + ' ' + TASKS[glove.task].label, { fontFamily: FONT, fontSize: '11px', color: CSS.grey }).setOrigin(0.5);
       const num = this.add.text(-68, -62, String(i + 1), { fontFamily: FONT, fontSize: '12px', color: CSS.dim });
@@ -202,7 +202,7 @@ class ZonaSeguraScene extends Phaser.Scene {
     if (Wallet.has('xalo') && this.served % 5 === 0) this.comboShield = true;
     this.refreshHud();
 
-    const gimg = this.add.image(w.sprite.x, 440, 'prod_' + glove.id).setDepth(9).setScale(0.6);
+    const gimg = productImage(this, w.sprite.x, 440, glove.id, 54).setDepth(9);
     this.tweens.add({ targets: gimg, y: 400, alpha: 0, duration: 500, onComplete: () => gimg.destroy() });
     w.bubble.destroy();
     this.tweens.add({ targets: w.sprite, x: -100, duration: 450, ease: 'Quad.in', onComplete: () => w.sprite.destroy() });

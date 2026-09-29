@@ -17,7 +17,7 @@ class MenuScene extends Phaser.Scene {
     }
 
     // Saldo de Safecoins
-    this.add.image(W - 30, 48, 'safecoin').setScale(0.8);
+    coinImage(this, W - 30, 48, 36);
     this.coinText = this.add.text(W - 58, 48, Wallet.coins(), {
       fontFamily: FONT, fontSize: '26px', fontStyle: 'bold', color: CSS.yellow
     }).setOrigin(1, 0.5);

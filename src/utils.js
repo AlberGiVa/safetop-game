@@ -186,6 +186,18 @@ function makeProductTexture(scene, id) {
   return key;
 }
 
+// Imagen de producto escalada a un tamaño máximo (sirve para dibujos y fotos reales)
+function productImage(scene, x, y, id, size) {
+  const img = scene.add.image(x, y, 'prod_' + id);
+  const s = size / Math.max(img.width, img.height);
+  return img.setScale(s);
+}
+// Icono de Safecoin (dibujo o logo real) a un tamaño dado
+function coinImage(scene, x, y, size) {
+  const img = scene.add.image(x, y, 'safecoin');
+  return img.setScale(size / Math.max(img.width, img.height));
+}
+
 // Rectángulo redondeado como textura (para botones y paneles)
 function makePanelTexture(scene, key, w, h, color, radius) {
   if (scene.textures.exists(key)) return;
@@ -343,7 +355,7 @@ function makeTopBar(scene, opts) {
   exit.on('pointerup', () => { Sfx.tap(); scene.scene.start(opts.back || 'Menu'); });
   if (opts.coins !== false) {
     makeSafecoinTexture(scene);
-    const icon = scene.add.image(W - 70, 48, 'safecoin').setScale(0.6).setDepth(20);
+    const icon = coinImage(scene, W - 70, 48, 26).setDepth(20);
     const txt = scene.add.text(W - 92, 48, Wallet.coins(), {
       fontFamily: FONT, fontSize: '20px', fontStyle: 'bold', color: CSS.yellow
     }).setOrigin(1, 0.5).setDepth(20);

@@ -167,7 +167,7 @@ class RunnerScene extends Phaser.Scene {
       const e2 = this.add.rectangle(x + o.w / 2, this.groundY, 8, 20, BRAND.yellow).setOrigin(0.5, 0).setDepth(4);
       o.objs.push(e1, e2); o.edges = [e1, e2];
     } else if (type === 'coin') {
-      o.w = 40; o.y = opts.y; o.spr = this.add.image(x, o.y, 'safecoin').setScale(0.9).setDepth(5); o.objs.push(o.spr);
+      o.w = 40; o.y = opts.y; o.spr = coinImage(this, x, o.y, 40).setDepth(5); o.objs.push(o.spr);
       this.tweens.add({ targets: o.spr, y: o.y - 10, duration: 400, yoyo: true, repeat: -1 });
     } else if (type === 'epi') {
       o.w = 56; o.y = opts.y; o.epi = opts.epi;

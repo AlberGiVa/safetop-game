@@ -161,7 +161,7 @@ class AlturaScene extends Phaser.Scene {
         this.tweens.add({ targets: p.ring, scale: { from: 1, to: 1.15 }, duration: 500, yoyo: true, repeat: -1 });
         objs.push(p.ring);
       }
-      if (p === coinPlank) { p.coin = this.add.image(x, y - 40, 'safecoin').setScale(0.7).setDepth(3); objs.push(p.coin); }
+      if (p === coinPlank) { p.coin = coinImage(this, x, y - 40, 30).setDepth(3); objs.push(p.coin); }
     });
     this.rows[r] = { planks, objs };
   }

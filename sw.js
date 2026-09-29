@@ -3,7 +3,7 @@
 const CACHE = 'safetop-arcade-v1';
 const FILES = [
   './', './index.html', './manifest.json', './lib/phaser.min.js',
-  './src/main.js', './src/utils.js', './src/data/products.js',
+  './src/main.js', './src/utils.js', './src/data/products.js', './src/data/assets.js',
   './src/scenes/BootScene.js', './src/scenes/MenuScene.js', './src/scenes/AlmacenScene.js',
   './src/scenes/ZonaSeguraScene.js', './src/scenes/AlturaScene.js', './src/scenes/InspectorScene.js',
   './src/scenes/RunnerScene.js', './src/scenes/GameOverScene.js',
