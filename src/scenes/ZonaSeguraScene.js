@@ -168,6 +168,7 @@ class ZonaSeguraScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    if (this.running && this.needFront) { this.needFront = false; this.setFront(); }
     if (!this.running || !this.front || this.busy) return;
     const w = this.front;
     w.patience -= delta;
@@ -242,7 +243,8 @@ class ZonaSeguraScene extends Phaser.Scene {
     this.queue.shift();
     this.queue.forEach((w, i) => this.tweens.add({ targets: w.star ? [w.sprite, w.star] : w.sprite, x: this.queueX(i), duration: 300 }));
     this.spawnWorker(this.queue.length);
-    this.time.delayedCall(350, () => { if (this.running) this.setFront(); });
+    this.front = null;
+    this.time.delayedCall(350, () => { this.needFront = true; });
   }
 
   levelUp() {
