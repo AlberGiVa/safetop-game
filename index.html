@@ -58,5 +58,12 @@
 
   <!-- Arranque -->
   <script src="src/main.js"></script>
+
+  <!-- Modo offline / instalable (solo en https o localhost) -->
+  <script>
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
 </body>
 </html>

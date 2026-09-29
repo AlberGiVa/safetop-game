@@ -318,6 +318,19 @@ function makeTopBar(scene, opts) {
   return { exit };
 }
 
+// Explosión de partículas (aciertos, recogidas, anclajes)
+function burst(scene, x, y, color, count) {
+  if (!scene.textures.exists('dot')) {
+    const g = scene.add.graphics(); g.fillStyle(0xffffff); g.fillCircle(6, 6, 6); g.generateTexture('dot', 12, 12); g.destroy();
+  }
+  const e = scene.add.particles(x, y, 'dot', {
+    speed: { min: 120, max: 320 }, angle: { min: 0, max: 360 }, scale: { start: 1, end: 0 },
+    lifespan: 600, gravityY: 400, tint: color || 0xffffff, emitting: false
+  }).setDepth(35);
+  e.explode(count || 18);
+  scene.time.delayedCall(800, () => e.destroy());
+}
+
 // Texto flotante que sube y desaparece
 function floatText(scene, x, y, msg, color, size) {
   const t = scene.add.text(x, y, msg, {

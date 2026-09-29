@@ -238,7 +238,7 @@ class RunnerScene extends Phaser.Scene {
       if (o.type === 'cone') { if (pb > this.groundY - o.h + 6 && this.onGround) this.hit(o, 'Te has tropezado con un cono'); }
       else if (o.type === 'beam') { if (pt < o.bottom) this.hit(o, 'Te has golpeado con la viga'); }
       else if (o.type === 'gap') { if (this.onGround && this.px - 10 > ol && this.px + 10 < or) inGap = o; }
-      else if (o.type === 'coin') { if (Math.abs(this.py - ph / 2 - o.y) < 70) { o.done = true; o.objs.forEach(s => s.destroy()); this.coins++; this.score += 25; Sfx.coin(); floatText(this, o.x, o.y - 20, '+25', CSS.yellow, 20); } }
+      else if (o.type === 'coin') { if (Math.abs(this.py - ph / 2 - o.y) < 70) { o.done = true; o.objs.forEach(s => s.destroy()); this.coins++; this.score += 25; Sfx.coin(); burst(this, o.x, o.y, BRAND.yellow, 10); floatText(this, o.x, o.y - 20, '+25', CSS.yellow, 20); } }
       else if (o.type === 'epi') { if (Math.abs(this.py - ph / 2 - o.y) < 70) { o.done = true; o.objs.forEach(s => s.destroy()); this.pickEpi(o.epi); } }
       else if (o.type === 'zone' && !o.entered) { o.entered = true; this.enterZone(o); }
     });
@@ -255,6 +255,7 @@ class RunnerScene extends Phaser.Scene {
     if (this.gear[k]) { this.score += 50; floatText(this, this.px, this.py - 130, RUNNER_EPIS[k].label + ' ya puesto +50', CSS.yellow, 16); }
     else { this.gear[k] = true; floatText(this, this.px, this.py - 130, RUNNER_EPIS[k].label + ' ✓', CSS.green, 22); }
     Sfx.ok();
+    burst(this, this.px, this.py - 50, RUNNER_EPIS[k].color, 12);
     this.refreshHud();
   }
 
@@ -265,6 +266,7 @@ class RunnerScene extends Phaser.Scene {
       this.score += 100;
       Sfx.level();
       floatText(this, this.px, this.py - 140, hz.epiName + ' te protege +100', CSS.green, 18);
+      burst(this, this.px, this.py - 60, BRAND.green, 20);
       this.refreshHud();
     } else {
       this.hit(o, 'Zona de ' + hz.label.toLowerCase() + ' sin ' + RUNNER_EPIS[hz.epi].label.toLowerCase());

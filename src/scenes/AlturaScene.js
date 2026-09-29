@@ -195,7 +195,7 @@ class AlturaScene extends Phaser.Scene {
     const prevRow = this.row, prevLane = this.lane;
     this.row = r; this.lane = lane;
     this.player.x = this.lanesX[lane]; this.player.y = this.rowY(r);
-    if (p.coin) { p.coin.destroy(); p.coin = null; this.score += 50; Sfx.coin(); floatText(this, this.player.x, this.player.y - 120, '+50', CSS.yellow, 24); }
+    if (p.coin) { p.coin.destroy(); p.coin = null; this.score += 50; Sfx.coin(); burst(this, this.player.x, this.player.y - 60, BRAND.yellow, 10); floatText(this, this.player.x, this.player.y - 120, '+50', CSS.yellow, 24); }
 
     if (p.cracked) { this.breakPlank(p, prevRow, prevLane); return; }
 
@@ -265,6 +265,7 @@ class AlturaScene extends Phaser.Scene {
     this.score += 30;
     Sfx.anchor();
     floatText(this, W / 2, this.player.y - 150, 'ANCLADO +30', CSS.green, 24);
+    burst(this, point.x, point.y, BRAND.orange, 14);
     this.refreshHud();
   }
 

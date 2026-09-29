@@ -27,6 +27,12 @@ class MenuScene extends Phaser.Scene {
     const snd = this.add.text(30, 48, Sfx.enabled() ? '🔊' : '🔇', { fontSize: '26px' }).setOrigin(0.5).setInteractive({ useHandCursor: true });
     snd.on('pointerup', () => { Save.set('sound', !Sfx.enabled()); snd.setText(Sfx.enabled() ? '🔊' : '🔇'); Sfx.init(); Sfx.tap(); });
 
+    // Pantalla completa (Android y PC; en iPhone se consigue instalando la app en la pantalla de inicio)
+    if (this.scale.fullscreen.available) {
+      const fs = this.add.text(80, 48, '⛶', { fontSize: '26px', color: CSS.grey }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+      fs.on('pointerup', () => { if (this.scale.isFullscreen) this.scale.stopFullscreen(); else this.scale.startFullscreen(); });
+    }
+
     // Título
     this.add.text(W / 2, 120, 'SAFETOP', {
       fontFamily: FONT, fontSize: '66px', fontStyle: 'bold', color: CSS.orange

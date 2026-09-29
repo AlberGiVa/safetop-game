@@ -140,6 +140,7 @@ class InspectorScene extends Phaser.Scene {
       const tag = this.add.text(x, y + 40, '✅ ' + w.act.fix, { fontFamily: FONT, fontSize: '12px', fontStyle: 'bold', color: CSS.navy, backgroundColor: '#3ddc84', padding: { x: 5, y: 3 } }).setOrigin(0.5).setDepth(6);
       w.objs.push(tag);
       floatText(this, x, y, '+' + pts, CSS.green, 26);
+      burst(this, x, y + 90, BRAND.green, 16);
       this.refreshHud();
       if (this.hazardsLeft <= 0) this.roundClear();
     } else {

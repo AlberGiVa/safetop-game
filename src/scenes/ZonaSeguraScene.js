@@ -196,6 +196,7 @@ class ZonaSeguraScene extends Phaser.Scene {
     this.served++;
     Sfx.ok();
     floatText(this, 200, 250, '+' + pts + (this.combo > 1 ? '  x' + this.combo : ''), CSS.green);
+    burst(this, w.sprite.x, 420, BRAND.green, 16);
     this.combo = Math.min(C.comboMax, this.combo + 1);
     if (Wallet.has('xalo') && this.served % 5 === 0) this.comboShield = true;
     this.refreshHud();

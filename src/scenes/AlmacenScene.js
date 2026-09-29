@@ -100,6 +100,19 @@ class AlmacenScene extends Phaser.Scene {
       }
       y += cardH + 14;
     });
+
+    // Reiniciar progreso (pide confirmación con un segundo toque)
+    if (this.filter === 'all') {
+      const reset = this.add.text(W / 2, y + 20, 'Reiniciar progreso', { fontFamily: FONT, fontSize: '14px', color: CSS.dim }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+      reset.on('pointerup', () => {
+        if (!reset.armed) { reset.armed = true; reset.setText('¿Seguro? Toca otra vez para borrar Safecoins, compras y récords').setColor(CSS.red); return; }
+        try { Object.keys(localStorage).filter(k => k.startsWith('safetop_')).forEach(k => localStorage.removeItem(k)); } catch (e) {}
+        Save.set('welcomed', true);
+        this.scene.start('Menu');
+      });
+      this.listObjs.push(reset);
+      y += 40;
+    }
     this.contentH = y + 20;
   }
 
