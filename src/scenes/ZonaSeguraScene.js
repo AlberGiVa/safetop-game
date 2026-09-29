@@ -198,6 +198,7 @@ class ZonaSeguraScene extends Phaser.Scene {
     floatText(this, 200, 250, '+' + pts + (this.combo > 1 ? '  x' + this.combo : ''), CSS.green);
     burst(this, w.sprite.x, 420, BRAND.green, 16);
     this.combo = Math.min(C.comboMax, this.combo + 1);
+    this.maxCombo = Math.max(this.maxCombo || 1, this.combo);
     if (Wallet.has('xalo') && this.served % 5 === 0) this.comboShield = true;
     this.refreshHud();
 
@@ -258,7 +259,8 @@ class ZonaSeguraScene extends Phaser.Scene {
     Sfx.over();
     this.time.delayedCall(700, () => {
       this.scene.start('GameOver', { score: this.score, mode: 'ZonaSegura', stat: 'Operarios protegidos: ' + this.served + ' · Nivel ' + this.level,
-        coinMult: Wallet.has('naturlux') ? 1.10 : 1 });
+        coinMult: Wallet.has('naturlux') ? 1.10 : 1,
+        stats: { served: this.served, combo5: this.maxCombo >= 5 ? 1 : 0, level5: this.level >= 5 ? 1 : 0 } });
     });
   }
 

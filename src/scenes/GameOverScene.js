@@ -15,6 +15,7 @@ class GameOverScene extends Phaser.Scene {
     const isRecord = d.score > 0 && d.score > prevBest;
     if (isRecord) Save.set('best_' + d.mode, d.score);
     const coins = Wallet.reward(d.score, isRecord, d.coinMult);
+    const missions = Missions.report(d.stats);
 
     this.cameras.main.setBackgroundColor(BRAND.navy);
 
@@ -40,8 +41,15 @@ class GameOverScene extends Phaser.Scene {
     this.tweens.add({ targets: c, scale: 1, duration: 400, delay: 600, ease: 'Back.out', onStart: () => Sfx.coin() });
     this.add.text(W / 2, 585, 'Total: ' + Wallet.coins() + ' Safecoins', { fontFamily: FONT, fontSize: '14px', color: CSS.grey }).setOrigin(0.5);
 
-    const w = this.add.image(W / 2, 660, 'worker_orange').setScale(0.8);
-    this.tweens.add({ targets: w, angle: { from: -4, to: 4 }, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+    // Misiones cumplidas en esta partida
+    if (missions.length) {
+      const lines = missions.map(m => '🎯 Misión cumplida: ' + m.text + '  +' + m.reward).join('\n');
+      const mt = this.add.text(W / 2, 650, lines, { fontFamily: FONT, fontSize: '15px', fontStyle: 'bold', color: CSS.green, align: 'center', wordWrap: { width: 460 } }).setOrigin(0.5);
+      this.tweens.add({ targets: mt, scale: { from: 0, to: 1 }, duration: 400, delay: 1000, ease: 'Back.out', onStart: () => Sfx.level() });
+    } else {
+      const w = this.add.image(W / 2, 660, 'worker_orange').setScale(0.8);
+      this.tweens.add({ targets: w, angle: { from: -4, to: 4 }, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+    }
 
     makeButton(this, W / 2, 760, 320, 66, 'REINTENTAR', BRAND.orange, () => this.scene.start(d.mode), 26);
     makeButton(this, W / 2 - 85, 840, 150, 54, 'MENÚ', BRAND.navy2, () => this.scene.start('Menu'), 20);

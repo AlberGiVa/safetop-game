@@ -263,6 +263,7 @@ class RunnerScene extends Phaser.Scene {
     const hz = RUNNER_HAZARDS[o.hz];
     if (this.gear[hz.epi]) {
       this.gear[hz.epi] = false;
+      this.zones = (this.zones || 0) + 1;
       this.score += 100;
       Sfx.level();
       floatText(this, this.px, this.py - 140, hz.epiName + ' te protege +100', CSS.green, 18);
@@ -309,7 +310,7 @@ class RunnerScene extends Phaser.Scene {
     this.cameras.main.shake(300, 0.015);
     this.tweens.add({ targets: this.player, angle: -90, y: this.py + 20, duration: 400 });
     const m = Math.floor(this.distance / 20);
-    this.time.delayedCall(900, () => this.scene.start('GameOver', { score: Math.floor(this.score), mode: 'Runner', stat: reason + '\nDistancia: ' + m + ' m · Safecoins recogidos: ' + this.coins }));
+    this.time.delayedCall(900, () => this.scene.start('GameOver', { score: Math.floor(this.score), mode: 'Runner', stat: reason + '\nDistancia: ' + m + ' m · Safecoins recogidos: ' + this.coins, stats: { meters: m, coins: this.coins, zones: this.zones || 0 } }));
   }
 
   refreshHud() {

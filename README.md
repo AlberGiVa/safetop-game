@@ -18,7 +18,7 @@ Funciona en **PC, móvil y tablet** desde el navegador, se puede **instalar como
 | **Inspector** | Respiratoria | Encuentra a los operarios sin la protección respiratoria adecuada (FFP, semimáscara, capucha AIRFLOW) antes de que acabe el tiempo. |
 | **Turno de trabajo** | Cabeza, ocular, auditiva… | Runner infinito: salta, agáchate y recoge los EPI que neutralizan cada zona de peligro. |
 
-Todos comparten **Safecoins** (moneda del juego), récords y el **Almacén EPI**, donde cada producto comprado da una ventaja real en algún modo.
+Todos comparten **Safecoins** (moneda del juego), récords, **misiones** (retos acumulativos con recompensa, 3 activas a la vez) y el **Almacén EPI**, donde cada producto comprado da una ventaja real en algún modo.
 
 ## Estructura
 
@@ -29,7 +29,7 @@ icons/                  Iconos de la app
 lib/phaser.min.js       Motor Phaser 3.90 (incluido, sin dependencias externas)
 src/main.js             Configuración y arranque
 src/utils.js            Texturas dibujadas por código, sonido sintetizado, guardado, widgets
-src/data/products.js    ← CATÁLOGO: productos, perks, tareas, textos, dificultad
+src/data/products.js    ← CATÁLOGO: productos, perks, tareas, misiones, textos, dificultad
 src/scenes/             Una escena por pantalla:
   BootScene.js            genera texturas
   MenuScene.js            menú principal

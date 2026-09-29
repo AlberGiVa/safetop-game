@@ -45,11 +45,26 @@ class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Operario que saluda
-    const w = this.add.image(W / 2, 300, 'worker_harness').setScale(1.05);
-    this.tweens.add({ targets: w, y: 292, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+    const w = this.add.image(60, 305, 'worker_harness').setScale(0.9);
+    this.tweens.add({ targets: w, y: 298, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+
+    // Panel de misiones
+    const mp = this.add.graphics();
+    mp.fillStyle(BRAND.navy2); mp.fillRoundedRect(110, 232, 410, 142, 16);
+    this.add.text(128, 244, '🎯 MISIONES', { fontFamily: FONT, fontSize: '15px', fontStyle: 'bold', color: CSS.orange });
+    Missions.active().forEach((m, i) => {
+      const y = 275 + i * 32;
+      const pct = Math.min(1, m.value / m.target);
+      this.add.text(128, y, m.text, { fontFamily: FONT, fontSize: '13px', color: CSS.white }).setOrigin(0, 0.5);
+      const bar = this.add.graphics();
+      bar.fillStyle(0x0f1a2b); bar.fillRoundedRect(128, y + 10, 300, 6, 3);
+      bar.fillStyle(BRAND.green); bar.fillRoundedRect(128, y + 10, Math.max(6, 300 * pct), 6, 3);
+      this.add.text(505, y - 6, Math.min(m.value, m.target) + '/' + m.target, { fontFamily: FONT, fontSize: '11px', color: CSS.grey }).setOrigin(1, 0.5);
+      this.add.text(505, y + 9, '+' + m.reward, { fontFamily: FONT, fontSize: '11px', fontStyle: 'bold', color: CSS.yellow }).setOrigin(1, 0.5);
+    });
 
     // Tarjetas de los 4 modos
-    const cardW = 480, cardH = 100, startY = 420, gap = 14;
+    const cardW = 480, cardH = 96, startY = 436, gap = 12;
     makePanelTexture(this, 'card', cardW, cardH, BRAND.navy2, 20);
 
     GAME_MODES.forEach((mode, i) => {
@@ -75,7 +90,7 @@ class MenuScene extends Phaser.Scene {
     });
 
     // Almacén EPI
-    makeButton(this, W / 2, 890, 300, 60, '🏬  ALMACÉN EPI', BRAND.orange, () => this.scene.start('Almacen'), 22);
+    makeButton(this, W / 2, 884, 300, 60, '🏬  ALMACÉN EPI', BRAND.orange, () => this.scene.start('Almacen'), 22);
 
     this.add.text(W / 2, H - 22, 'Safetop · Asegurando la salud de tu equipo desde 1989', {
       fontFamily: FONT, fontSize: '12px', color: '#4a5670'

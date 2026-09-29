@@ -240,7 +240,7 @@ class AlturaScene extends Phaser.Scene {
     this.state = 'dead'; this.running = false;
     Sfx.over();
     this.tweens.add({ targets: this.player, y: this.player.y + 900, angle: 180, duration: 900, ease: 'Quad.in' });
-    this.time.delayedCall(900, () => this.scene.start('GameOver', { score: this.score, mode: 'Altura', stat: 'Has caído sin anclaje · Piso ' + this.maxRow }));
+    this.time.delayedCall(900, () => this.scene.start('GameOver', { score: this.score, mode: 'Altura', stat: 'Has caído sin anclaje · Piso ' + this.maxRow, stats: { rows: this.maxRow, anchors: this.anchors || 0 } }));
   }
 
   // ---------- Anclaje ----------
@@ -262,6 +262,7 @@ class AlturaScene extends Phaser.Scene {
 
   setAnchored(row, point) {
     this.anchored = true; this.anchorRow = row; this.anchorPoint = point;
+    this.anchors = (this.anchors || 0) + 1;
     this.score += 30;
     Sfx.anchor();
     floatText(this, W / 2, this.player.y - 150, 'ANCLADO +30', CSS.green, 24);
@@ -289,7 +290,7 @@ class AlturaScene extends Phaser.Scene {
       this.dangerY -= speed * dt;
       if (this.dangerY <= this.player.y - 40 && this.state !== 'dead') {
         this.state = 'dead'; this.running = false; Sfx.over();
-        this.time.delayedCall(600, () => this.scene.start('GameOver', { score: this.score, mode: 'Altura', stat: 'El polvo te ha alcanzado · Piso ' + this.maxRow }));
+        this.time.delayedCall(600, () => this.scene.start('GameOver', { score: this.score, mode: 'Altura', stat: 'El polvo te ha alcanzado · Piso ' + this.maxRow, stats: { rows: this.maxRow, anchors: this.anchors || 0 } }));
       }
     }
 

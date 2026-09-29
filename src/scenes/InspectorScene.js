@@ -200,6 +200,6 @@ class InspectorScene extends Phaser.Scene {
       const t = this.add.text(w.sprite.x, w.sprite.y - 150, '❌ ' + w.act.fix, { fontFamily: FONT, fontSize: '12px', fontStyle: 'bold', color: CSS.white, backgroundColor: '#ff4d4d', padding: { x: 5, y: 3 } }).setOrigin(0.5).setDepth(6);
       w.objs.push(t);
     });
-    this.time.delayedCall(1800, () => this.scene.start('GameOver', { score: this.score, mode: 'Inspector', stat: 'Rondas: ' + this.round + ' · Riesgos detectados: ' + this.totalFound }));
+    this.time.delayedCall(1800, () => this.scene.start('GameOver', { score: this.score, mode: 'Inspector', stat: 'Rondas: ' + this.round + ' · Riesgos detectados: ' + this.totalFound, stats: { hazards: this.totalFound, rounds: this.round - 1 } }));
   }
 }

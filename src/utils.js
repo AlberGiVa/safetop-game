@@ -284,6 +284,39 @@ const Wallet = {
   }
 };
 
+// Misiones: 3 activas a la vez; al cumplir una entra la siguiente
+const Missions = {
+  state() {
+    const s = Save.get('missions', null);
+    if (s) return s;
+    const init = { active: [0, 1, 2], next: 3, progress: {}, done: [] };
+    Save.set('missions', init);
+    return init;
+  },
+  active() { return this.state().active.map(i => Object.assign({ index: i, value: this.state().progress[i] || 0 }, MISSIONS[i])); },
+  // stats: { served, rows, hazards, meters, anchors, combo5, rounds, zones, coins, level5 }
+  report(stats) {
+    if (!stats) return [];
+    const s = this.state();
+    const completed = [];
+    s.active.slice().forEach(i => {
+      const m = MISSIONS[i];
+      const v = stats[m.stat] || 0;
+      if (!v) return;
+      s.progress[i] = (s.progress[i] || 0) + v;
+      if (s.progress[i] >= m.target) {
+        completed.push(m);
+        s.done.push(i);
+        s.active = s.active.filter(x => x !== i);
+        if (s.next < MISSIONS.length) { s.active.push(s.next); s.next++; }
+      }
+    });
+    Save.set('missions', s);
+    completed.forEach(m => Wallet.add(m.reward));
+    return completed;
+  }
+};
+
 // ============================================================
 //  WIDGETS
 // ============================================================

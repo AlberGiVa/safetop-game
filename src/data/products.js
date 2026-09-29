@@ -214,3 +214,23 @@ const GAME_MODES = [
   { key: 'Runner',     title: 'Turno de trabajo', emoji: '🏃', family: 'cabeza',
     desc: 'Corre por la obra, esquiva peligros y recoge los EPI que te protegen.' }
 ];
+
+// ---------- Misiones (retos acumulativos con recompensa en Safecoins) ----------
+// stat: la estadística que suma cada partida (la envía cada modo al terminar)
+const MISSIONS = [
+  { id: 'm1',  text: 'Protege a 15 operarios en Zona Segura',   stat: 'served',   target: 15,  reward: 60 },
+  { id: 'm2',  text: 'Sube 20 pisos en Altura',                 stat: 'rows',     target: 20,  reward: 60 },
+  { id: 'm3',  text: 'Detecta 8 riesgos en Inspector',          stat: 'hazards',  target: 8,   reward: 60 },
+  { id: 'm4',  text: 'Recorre 300 m en Turno de trabajo',       stat: 'meters',   target: 300, reward: 60 },
+  { id: 'm5',  text: 'Ancla el arnés 5 veces',                  stat: 'anchors',  target: 5,   reward: 80 },
+  { id: 'm6',  text: 'Consigue un combo x5 en Zona Segura',     stat: 'combo5',   target: 1,   reward: 80 },
+  { id: 'm7',  text: 'Completa 3 rondas de Inspector',          stat: 'rounds',   target: 3,   reward: 80 },
+  { id: 'm8',  text: 'Atraviesa 6 zonas de peligro protegido',  stat: 'zones',    target: 6,   reward: 100 },
+  { id: 'm9',  text: 'Protege a 50 operarios en Zona Segura',   stat: 'served',   target: 50,  reward: 120 },
+  { id: 'm10', text: 'Sube 60 pisos en Altura',                 stat: 'rows',     target: 60,  reward: 120 },
+  { id: 'm11', text: 'Detecta 30 riesgos en Inspector',         stat: 'hazards',  target: 30,  reward: 120 },
+  { id: 'm12', text: 'Recorre 1500 m en Turno de trabajo',      stat: 'meters',   target: 1500, reward: 150 },
+  { id: 'm13', text: 'Recoge 40 Safecoins corriendo',           stat: 'coins',    target: 40,  reward: 150 },
+  { id: 'm14', text: 'Llega al nivel 5 en Zona Segura',         stat: 'level5',   target: 1,   reward: 200 },
+  { id: 'm15', text: 'Sube 100 pisos en Altura',                stat: 'rows',     target: 100, reward: 250 }
+];
