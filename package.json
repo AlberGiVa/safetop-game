@@ -1,0 +1,20 @@
+{
+  "name": "safetop-arcade",
+  "version": "1.0.0",
+  "description": "Safetop Arcade: cuatro minijuegos con los EPI de Safetop. HTML5 + Phaser 3, empaquetable con Capacitor para Android e iOS.",
+  "private": true,
+  "scripts": {
+    "start": "npx serve . -l 8080",
+    "build": "node scripts/build-www.js",
+    "cap:init": "npx cap init \"Safetop Arcade\" net.safetop.arcade --web-dir www",
+    "cap:android": "npm run build && npx cap add android && npx cap sync android && npx cap open android",
+    "cap:ios": "npm run build && npx cap add ios && npx cap sync ios && npx cap open ios",
+    "cap:sync": "npm run build && npx cap sync"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/ios": "^6.0.0"
+  }
+}

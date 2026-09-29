@@ -1,0 +1,11 @@
+{
+  "appId": "net.safetop.arcade",
+  "appName": "Safetop Arcade",
+  "webDir": "www",
+  "backgroundColor": "#0f1a2b",
+  "android": { "allowMixedContent": false },
+  "ios": { "contentInset": "never" },
+  "plugins": {
+    "SplashScreen": { "launchShowDuration": 800, "backgroundColor": "#0f1a2b" }
+  }
+}

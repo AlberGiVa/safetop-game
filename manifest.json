@@ -1,0 +1,15 @@
+{
+  "name": "Safetop Arcade",
+  "short_name": "Safetop",
+  "description": "Protege a tu equipo. Bate tu récord. Cuatro minijuegos con los EPI de Safetop.",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#0f1a2b",
+  "theme_color": "#0f1a2b",
+  "lang": "es",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
