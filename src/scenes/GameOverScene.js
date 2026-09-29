@@ -54,5 +54,10 @@ class GameOverScene extends Phaser.Scene {
     makeButton(this, W / 2, 760, 320, 66, 'REINTENTAR', BRAND.orange, () => this.scene.start(d.mode), 26);
     makeButton(this, W / 2 - 85, 840, 150, 54, 'MENÚ', BRAND.navy2, () => this.scene.start('Menu'), 20);
     makeButton(this, W / 2 + 85, 840, 150, 54, 'ALMACÉN', BRAND.navy2, () => this.scene.start('Almacen'), 20);
+    if (navigator.share) {
+      makeButton(this, W / 2, 910, 320, 48, '📣 COMPARTIR RÉCORD', BRAND.navy2, () => {
+        navigator.share({ title: 'Safetop Arcade', text: 'He hecho ' + d.score + ' puntos en ' + mode.title + ' de Safetop Arcade. ¿Me superas?', url: location.href.split('#')[0] }).catch(() => {});
+      }, 18);
+    }
   }
 }

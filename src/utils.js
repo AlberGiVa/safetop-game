@@ -236,7 +236,8 @@ const Sfx = {
     o.start(t); o.stop(t + dur);
   },
   ok()    { this.beep(660, 0.08); setTimeout(() => this.beep(990, 0.12), 70); },
-  fail()  { this.beep(200, 0.25, 'sawtooth'); },
+  fail()  { this.beep(200, 0.25, 'sawtooth'); this.vibrate(80); },
+  vibrate(ms) { try { if (this.enabled() && navigator.vibrate) navigator.vibrate(ms); } catch (e) {} },
   tap()   { this.beep(440, 0.05, 'triangle', 0.05); },
   coin()  { this.beep(1200, 0.06, 'sine', 0.06); setTimeout(() => this.beep(1600, 0.1, 'sine', 0.06), 50); },
   jump()  { this.beep(300, 0.12, 'triangle', 0.05); },
@@ -389,8 +390,10 @@ function toast(scene, msg, y, color) {
 }
 
 // Panel de tutorial con botón de empezar. Solo se muestra la primera vez.
+const PC_HINTS = { ZonaSegura: 'Teclas 1-6', Altura: 'Flechas ← ↑ → y ESPACIO para anclar', Inspector: 'Ratón', Runner: '↑ o ESPACIO salta · ↓ agacha' };
 function showTutorial(scene, key, title, body, onStart) {
   if (Save.get('tutorial_' + key, false)) { onStart(); return; }
+  if (scene.sys.game.device.os.desktop && PC_HINTS[key]) body += '\n\n⌨️ En PC: ' + PC_HINTS[key];
   const c = scene.add.container(0, 0).setDepth(50);
   const dim = scene.add.rectangle(W / 2, H / 2, W, H, 0x000000, 0.75).setInteractive();
   const bg = scene.add.graphics();

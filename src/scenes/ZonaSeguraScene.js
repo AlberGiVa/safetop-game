@@ -248,7 +248,7 @@ class ZonaSeguraScene extends Phaser.Scene {
       const g = GLOVES[this.unlocked];
       this.unlocked++;
       this.setGloveUnlocked(this.gloveButtons[this.unlocked - 1], true, true);
-      msg += '\nNuevo guante: ' + g.name;
+      msg += '\nNuevo guante: ' + g.name + '\n' + g.norm;
     }
     this.levelText.setText('NIVEL ' + this.level);
     toast(this, msg);

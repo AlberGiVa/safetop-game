@@ -115,6 +115,7 @@ class AlturaScene extends Phaser.Scene {
     this.anchorBtn.img.setScrollFactor(0).setDepth(20); this.anchorBtn.txt.setScrollFactor(0).setDepth(21);
     this.anchorBtn.img.setVisible(false); this.anchorBtn.txt.setVisible(false);
     this.anchorProgress = this.add.graphics().setScrollFactor(0).setDepth(22);
+    this.dustWarn = this.add.text(W / 2, 140, '⚠️ ¡EL POLVO SE ACERCA!', { fontFamily: FONT, fontSize: '22px', fontStyle: 'bold', color: CSS.red, stroke: CSS.navy, strokeThickness: 5 }).setOrigin(0.5).setScrollFactor(0).setDepth(22).setVisible(false);
   }
 
   // ---------- Filas del andamio ----------
@@ -287,6 +288,7 @@ class AlturaScene extends Phaser.Scene {
       let speed = Math.min(C.dangerSpeedMax, C.dangerSpeedStart + this.maxRow * 1.2);
       const gap = this.dangerY - this.player.y;
       if (gap > 700) speed *= 2.5;
+      this.dustWarn.setVisible(gap < 380 && this.state !== 'dead').setAlpha(Math.floor(time / 250) % 2 ? 1 : 0.4);
       this.dangerY -= speed * dt;
       if (this.dangerY <= this.player.y - 40 && this.state !== 'dead') {
         this.state = 'dead'; this.running = false; Sfx.over();
