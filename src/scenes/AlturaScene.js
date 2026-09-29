@@ -200,7 +200,10 @@ class AlturaScene extends Phaser.Scene {
 
     if (p.cracked) { this.breakPlank(p, prevRow, prevLane); return; }
 
-    if (r > this.maxRow) { this.maxRow = r; this.score += ALTURA_CONFIG.pointsPerRow; }
+    if (r > this.maxRow) {
+      this.maxRow = r; this.score += ALTURA_CONFIG.pointsPerRow;
+      if (r % 10 === 0) { this.score += 100; Sfx.level(); toast(this, 'PISO ' + r + '  +100', 300, 0x1b7a4f); }
+    }
     if (this.anchored && r - this.anchorRow >= this.anchorRowsTotal) {
       this.anchored = false; this.anchorPoint = null; this.rope.clear();
       toast(this, 'Anclaje agotado\nBusca otra anilla 🟠', 300, 0x8a2b2b);

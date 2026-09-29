@@ -129,9 +129,11 @@ class ZonaSeguraScene extends Phaser.Scene {
     let task;
     do { task = Phaser.Utils.Array.GetRandom(tasks); } while (tasks.length > 1 && task === this.lastTask && Math.random() < 0.7);
     this.lastTask = task;
-    const skin = Phaser.Utils.Array.GetRandom(['worker_orange', 'worker_yellow', 'worker_green']);
+    const vip = this.level >= 2 && Math.random() < 0.12;
+    const skin = vip ? 'worker_vip' : Phaser.Utils.Array.GetRandom(['worker_orange', 'worker_yellow', 'worker_green']);
     const sprite = this.add.image(W + 80, 440, skin).setDepth(3 - pos * 0.1);
-    const worker = { sprite, task, bubble: null, patience: 0, patienceMax: 0 };
+    const worker = { sprite, task, vip, bubble: null, patience: 0, patienceMax: 0 };
+    if (vip) { worker.star = this.add.text(W + 80, 350, '⭐', { fontSize: '24px' }).setOrigin(0.5).setDepth(4); this.tweens.add({ targets: worker.star, x: this.queueX(pos), duration: 450, ease: 'Quad.out' }); }
     this.queue.push(worker);
     this.tweens.add({ targets: sprite, x: this.queueX(pos), duration: 450, ease: 'Quad.out' });
     return worker;
@@ -148,14 +150,14 @@ class ZonaSeguraScene extends Phaser.Scene {
     this.front = this.queue[0];
     if (!this.front) return;
     const w = this.front;
-    w.patienceMax = this.patienceForLevel();
+    w.patienceMax = this.patienceForLevel() * (w.vip ? 0.6 : 1);
     w.patience = w.patienceMax;
     const t = TASKS[w.task];
     const b = this.add.container(200, 300).setDepth(8);
     const bg = this.add.graphics();
     bg.fillStyle(0xffffff); bg.fillRoundedRect(-95, -60, 190, 120, 18); bg.fillTriangle(-16, 58, 16, 58, 0, 80);
     const emoji = this.add.text(0, -18, t.emoji, { fontSize: '54px' }).setOrigin(0.5);
-    const label = this.add.text(0, 32, t.label, { fontFamily: FONT, fontSize: '16px', fontStyle: 'bold', color: CSS.navy2 }).setOrigin(0.5);
+    const label = this.add.text(0, 32, (w.vip ? '⭐ x3 · ' : '') + t.label, { fontFamily: FONT, fontSize: '16px', fontStyle: 'bold', color: w.vip ? '#b8860b' : CSS.navy2 }).setOrigin(0.5);
     const barBg = this.add.graphics(); barBg.fillStyle(0xdde3ee); barBg.fillRoundedRect(-80, 46, 160, 8, 4);
     const bar = this.add.graphics();
     b.add([bg, emoji, label, barBg, bar]);
@@ -192,6 +194,7 @@ class ZonaSeguraScene extends Phaser.Scene {
     let pts = C.pointsBase * this.combo;
     if (glove.task === 'corte' && Wallet.has('gripcut')) pts *= 2;    // perk GRIPCUT
     if (glove.task === 'calor' && Wallet.has('tornolux')) pts *= 2;   // perk TORNOLUX-N
+    if (w.vip) pts *= 3;
     this.score += pts;
     this.served++;
     Sfx.ok();
@@ -205,6 +208,7 @@ class ZonaSeguraScene extends Phaser.Scene {
     const gimg = productImage(this, w.sprite.x, 440, glove.id, 54).setDepth(9);
     this.tweens.add({ targets: gimg, y: 400, alpha: 0, duration: 500, onComplete: () => gimg.destroy() });
     w.bubble.destroy();
+    if (w.star) w.star.destroy();
     this.tweens.add({ targets: w.sprite, x: -100, duration: 450, ease: 'Quad.in', onComplete: () => w.sprite.destroy() });
 
     if (this.served % C.servedPerLevel === 0) this.levelUp();
@@ -226,6 +230,7 @@ class ZonaSeguraScene extends Phaser.Scene {
     this.refreshHud();
 
     w.bubble.destroy();
+    if (w.star) w.star.destroy();
     const face = this.add.text(w.sprite.x, 400, '😰', { fontSize: '40px' }).setOrigin(0.5).setDepth(9);
     this.tweens.add({ targets: [w.sprite, face], x: -100, duration: 500, ease: 'Quad.in', onComplete: () => { w.sprite.destroy(); face.destroy(); } });
 
@@ -235,7 +240,7 @@ class ZonaSeguraScene extends Phaser.Scene {
 
   nextWorker() {
     this.queue.shift();
-    this.queue.forEach((w, i) => this.tweens.add({ targets: w.sprite, x: this.queueX(i), duration: 300 }));
+    this.queue.forEach((w, i) => this.tweens.add({ targets: w.star ? [w.sprite, w.star] : w.sprite, x: this.queueX(i), duration: 300 }));
     this.spawnWorker(this.queue.length);
     this.time.delayedCall(350, () => { if (this.running) this.setFront(); });
   }

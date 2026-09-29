@@ -18,6 +18,7 @@ class BootScene extends Phaser.Scene {
     makeWorkerTexture(this, 'worker_yellow', 0xffc82e);
     makeWorkerTexture(this, 'worker_green',  0x3ddc84);
     makeWorkerTexture(this, 'worker_harness', 0xf58220, { harness: true });
+    makeWorkerTexture(this, 'worker_vip', 0xffffff, { helmetColor: 0xffd700 });
 
     // Operarios del modo Inspector: chaleco x protección puesta
     ['orange', 'yellow', 'green', 'blue'].forEach(v => {
