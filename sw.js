@@ -1,13 +1,13 @@
 // Service worker: permite jugar sin conexión e instalar el juego como app.
 // Estrategia: red primero (para recibir actualizaciones), caché si no hay red.
-const CACHE = 'safetop-arcade-v1';
+const CACHE = 'safetop-arcade-v2';
 const FILES = [
   './', './index.html', './manifest.json', './lib/phaser.min.js',
-  './src/main.js', './src/utils.js', './src/data/products.js', './src/data/assets.js',
+  './src/main.js', './src/utils.js', './src/art.js', './src/data/products.js', './src/data/assets.js',
   './src/scenes/BootScene.js', './src/scenes/MenuScene.js', './src/scenes/AlmacenScene.js',
   './src/scenes/ZonaSeguraScene.js', './src/scenes/AlturaScene.js', './src/scenes/InspectorScene.js',
   './src/scenes/RunnerScene.js', './src/scenes/GameOverScene.js',
-  './icons/icon-192.png', './icons/icon-512.png', './icons/icon-180.png'
+  './icons/icon-192.png', './icons/icon-512.png', './icons/icon-180.png', './assets/safecoin.png', './assets/logo.png'
 ];
 
 self.addEventListener('install', e => {

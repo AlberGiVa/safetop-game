@@ -8,7 +8,7 @@ const BRAND = {
   navy:   0x0f1a2b,   // fondo
   navy2:  0x18294a,   // paneles
   navy3:  0x233a63,   // paneles claros
-  orange: 0xf58220,   // acento Safetop
+  orange: 0xeb5d1a,   // naranja del logo Safetop
   yellow: 0xffc82e,   // alta visibilidad
   green:  0x3ddc84,   // acierto
   red:    0xff4d4d,   // fallo
@@ -18,7 +18,7 @@ const BRAND = {
   dim:    0x5c6a85
 };
 const CSS = {
-  orange: '#f58220', yellow: '#ffc82e', green: '#3ddc84', red: '#ff4d4d',
+  orange: '#eb5d1a', yellow: '#ffc82e', green: '#3ddc84', red: '#ff4d4d',
   white: '#ffffff', grey: '#9aa7bd', dim: '#5c6a85', navy: '#0f1a2b', navy2: '#18294a'
 };
 

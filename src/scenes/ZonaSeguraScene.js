@@ -10,7 +10,9 @@ class ZonaSeguraScene extends Phaser.Scene {
 
   create() {
     const C = ZONA_SEGURA_CONFIG;
-    this.cameras.main.setBackgroundColor(BRAND.navy);
+    hiDPI(this);
+    addBackground(this, '#0f1a2b', '#0f1a2b');
+    addVignette(this, 0.45);
 
     // ---- Estado ----
     this.score = 0;
@@ -47,29 +49,39 @@ class ZonaSeguraScene extends Phaser.Scene {
 
   // ---------- Escenario ----------
   drawScenery() {
+    makeGradientTexture(this, 'zs_wall', W, 400, '#2a4470', '#1a2c50');
+    this.add.image(W / 2, 310, 'zs_wall').setDisplaySize(W, 400);
     const g = this.add.graphics();
-    g.fillStyle(0x1c2d4f); g.fillRect(0, 110, W, 400);
+    // zócalo
+    g.fillStyle(0x15233f); g.fillRect(0, 470, W, 40);
     // ventana
     g.fillStyle(0x6fb7e8); g.fillRoundedRect(380, 150, 130, 100, 10);
     g.fillStyle(0xffffff, 0.8); g.fillCircle(420, 190, 14); g.fillCircle(438, 184, 18); g.fillCircle(458, 192, 13);
     g.fillStyle(0x1c2d4f); g.fillRect(443, 150, 6, 100); g.fillRect(380, 197, 130, 6);
     // cartel
-    g.fillStyle(BRAND.orange); g.fillRoundedRect(40, 150, 210, 60, 8);
-    this.add.text(145, 180, 'CASETA EPI', { fontFamily: FONT, fontSize: '24px', fontStyle: 'bold', color: CSS.white }).setOrigin(0.5);
+    makePanelTexture(this, 'zs_sign', 210, 60, BRAND.orange, 8);
+    addImg(this, 145, 180, 'zs_sign');
+    this.add.text(145, 180, 'CASETA EPI', { fontFamily: FONT, fontSize: '24px', fontStyle: '900', color: CSS.white }).setOrigin(0.5).setShadow(0, 2, 'rgba(0,0,0,0.4)', 2);
     // estantería con guantes de fondo
-    g.fillStyle(0x15233f); g.fillRoundedRect(300, 260, 220, 120, 6);
+    g.fillStyle(0x15233f); g.fillRoundedRect(300, 260, 220, 124, 6);
     g.fillStyle(0x2c3e66); g.fillRect(300, 300, 220, 4); g.fillRect(300, 340, 220, 4);
+    // guantes expuestos en la estantería
+    ['oxylux', 'nitqrolux', 'nitrisafe'].forEach((id, i) => productImage(this, 335 + i * 75, 282, id, 34));
+    ['terrytop', 'g131ky', 'xalo'].forEach((id, i) => productImage(this, 335 + i * 75, 322, id, 34));
+    ['gripcut', 'naturlux', 'tactylux'].forEach((id, i) => productImage(this, 335 + i * 75, 362, id, 34));
     // suelo y mostrador
-    g.fillStyle(0x233a63); g.fillRect(0, 510, W, 100);
+    g.fillStyle(0x1b2d4f); g.fillRect(0, 510, W, 100);
+    makeGradientTexture(this, 'zs_counter', W, 82, '#b07a3a', '#5a3814');
+    this.add.image(W / 2, 541, 'zs_counter').setDisplaySize(W, 82).setDepth(5);
     const m = this.add.graphics().setDepth(5);
-    m.fillStyle(0x8a5a2b); m.fillRect(0, 500, W, 22);
-    m.fillStyle(0x6a4420); m.fillRect(0, 522, W, 60);
-    for (let i = 0; i < 13; i++) { m.fillStyle(i % 2 === 0 ? BRAND.yellow : 0x111111); m.fillRect(i * 44, 574, 44, 8); }
+    m.fillStyle(0xd9a05a); m.fillRect(0, 500, W, 6);
+    m.fillStyle(0x000000, 0.25); m.fillRect(0, 582, W, 30);
+    addTile(this, W / 2, 578, W, 12, 'stripes').setDepth(5);
   }
 
   // ---------- HUD ----------
   drawHud() {
-    this.scoreText = this.add.text(20, 28, '0', { fontFamily: FONT, fontSize: '40px', fontStyle: 'bold', color: CSS.white }).setDepth(20);
+    this.scoreText = this.add.text(20, 28, '0', { fontFamily: FONT, fontSize: '40px', fontStyle: '900', color: CSS.white }).setDepth(20).setShadow(0, 3, 'rgba(0,0,0,0.5)', 4);
     this.comboText = this.add.text(20, 74, '', { fontFamily: FONT, fontSize: '18px', fontStyle: 'bold', color: CSS.yellow }).setDepth(20);
     this.levelText = this.add.text(W / 2 - 30, 48, 'NIVEL 1', { fontFamily: FONT, fontSize: '22px', fontStyle: 'bold', color: CSS.grey }).setOrigin(0.5).setDepth(20);
     this.lifeIcons = [];
@@ -91,7 +103,7 @@ class ZonaSeguraScene extends Phaser.Scene {
     this.gloveButtons = GLOVES.map((glove, i) => {
       const x = xs[i % cols], y = ys[Math.floor(i / cols)];
       const c = this.add.container(x, y).setDepth(10);
-      const panel = this.add.image(0, 0, 'glovebtn');
+      const panel = addImg(this, 0, 0, 'glovebtn');
       const img = productImage(this, 0, -22, glove.id, 72);
       const name = this.add.text(0, 36, glove.name, { fontFamily: FONT, fontSize: '15px', fontStyle: 'bold', color: CSS.white }).setOrigin(0.5);
       const desc = this.add.text(0, 56, TASKS[glove.task].emoji + ' ' + TASKS[glove.task].label, { fontFamily: FONT, fontSize: '11px', color: CSS.grey }).setOrigin(0.5);
@@ -131,7 +143,7 @@ class ZonaSeguraScene extends Phaser.Scene {
     this.lastTask = task;
     const vip = this.level >= 2 && Math.random() < 0.12;
     const skin = vip ? 'worker_vip' : Phaser.Utils.Array.GetRandom(['worker_orange', 'worker_yellow', 'worker_green']);
-    const sprite = this.add.image(W + 80, 440, skin).setDepth(3 - pos * 0.1);
+    const sprite = addImg(this, W + 80, 440, skin).setDepth(3 - pos * 0.1);
     const worker = { sprite, task, vip, bubble: null, patience: 0, patienceMax: 0 };
     if (vip) { worker.star = this.add.text(W + 80, 350, '⭐', { fontSize: '24px' }).setOrigin(0.5).setDepth(4); this.tweens.add({ targets: worker.star, x: this.queueX(pos), duration: 450, ease: 'Quad.out' }); }
     this.queue.push(worker);
@@ -155,6 +167,7 @@ class ZonaSeguraScene extends Phaser.Scene {
     const t = TASKS[w.task];
     const b = this.add.container(200, 300).setDepth(8);
     const bg = this.add.graphics();
+    bg.fillStyle(0x000000, 0.25); bg.fillRoundedRect(-92, -54, 190, 120, 18);
     bg.fillStyle(0xffffff); bg.fillRoundedRect(-95, -60, 190, 120, 18); bg.fillTriangle(-16, 58, 16, 58, 0, 80);
     const emoji = this.add.text(0, -18, t.emoji, { fontSize: '54px' }).setOrigin(0.5);
     const label = this.add.text(0, 32, (w.vip ? '⭐ x3 · ' : '') + t.label, { fontFamily: FONT, fontSize: '16px', fontStyle: 'bold', color: w.vip ? '#b8860b' : CSS.navy2 }).setOrigin(0.5);

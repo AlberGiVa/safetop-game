@@ -17,4 +17,4 @@ const PRODUCT_IMAGES = {
 };
 
 // Logo de Safetop: se usa como icono de Safecoin y en el menú
-const LOGO_IMAGE = null;   // p. ej. 'assets/logo.png'
+const LOGO_IMAGE = 'assets/safecoin.png';

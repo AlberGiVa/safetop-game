@@ -11,7 +11,7 @@ class AlturaScene extends Phaser.Scene {
 
   create() {
     const C = ALTURA_CONFIG;
-    this.cameras.main.setBackgroundColor(BRAND.navy);
+    hiDPI(this);
     this.lanesX = [110, 270, 430];
     this.groundY = 800;
     this.rows = {};
@@ -35,12 +35,12 @@ class AlturaScene extends Phaser.Scene {
     for (let r = 0; r <= 8; r++) this.makeRow(r);
 
     // Jugador
-    this.player = this.add.image(this.lanesX[1], this.groundY, 'worker_harness').setOrigin(0.5, 1).setDepth(6).setScale(0.8);
+    this.player = addImg(this, this.lanesX[1], this.groundY, 'worker_harness', 0.8).setOrigin(0.5, 1).setDepth(6);
     this.rope = this.add.graphics().setDepth(5);
     this.dust = this.add.graphics().setDepth(8);
 
     this.drawHud();
-    this.cameras.main.scrollY = 0;
+    setCamTop(this, 0);
 
     // Teclado
     this.input.keyboard.on('keydown-LEFT',  () => this.tryJump(this.lane - 1));
@@ -57,65 +57,31 @@ class AlturaScene extends Phaser.Scene {
   }
 
   // ---------- Texturas propias ----------
-  makeTextures() {
-    if (!this.textures.exists('plank')) {
-      const g = this.add.graphics();
-      g.fillStyle(0xb07a3a); g.fillRoundedRect(0, 0, 130, 22, 4);
-      g.fillStyle(0x8a5a2b); g.fillRect(0, 16, 130, 6);
-      g.fillStyle(0x6a4420); g.fillRect(20, 4, 3, 10); g.fillRect(107, 4, 3, 10);
-      g.generateTexture('plank', 130, 22); g.destroy();
-    }
-    if (!this.textures.exists('plank_cracked')) {
-      const g = this.add.graphics();
-      g.fillStyle(0x8f6430); g.fillRoundedRect(0, 0, 130, 22, 4);
-      g.fillStyle(0x6a4420); g.fillRect(0, 16, 130, 6);
-      g.lineStyle(2, 0x2b1a0a);
-      g.lineBetween(50, 0, 62, 12); g.lineBetween(62, 12, 56, 22); g.lineBetween(62, 12, 78, 8);
-      g.lineBetween(95, 22, 102, 10); g.lineBetween(102, 10, 112, 14);
-      g.generateTexture('plank_cracked', 130, 22); g.destroy();
-    }
-    if (!this.textures.exists('anchor_ring')) {
-      const g = this.add.graphics();
-      g.lineStyle(6, BRAND.orange); g.strokeCircle(18, 18, 12);
-      g.fillStyle(0x9aa7bd); g.fillRect(12, 28, 12, 8);
-      g.generateTexture('anchor_ring', 36, 40); g.destroy();
-    }
-  }
+  makeTextures() { makePlankTextures(this); }
 
   drawBackground() {
     // cielo con degradado (rectángulos apilados) y postes del andamio
-    this.bg = this.add.graphics().setDepth(0).setScrollFactor(0);
-    for (let i = 0; i < 12; i++) {
-      const c = Phaser.Display.Color.Interpolate.ColorWithColor(
-        Phaser.Display.Color.ValueToColor(0x0f1a2b), Phaser.Display.Color.ValueToColor(0x2a4a7a), 12, i);
-      this.bg.fillStyle(Phaser.Display.Color.GetColor(c.r, c.g, c.b));
-      this.bg.fillRect(0, i * 80, W, 80);
-    }
+    hud(addBackground(this, '#0f1a2b', '#2a4a7a', '#4a7ab0')).setDepth(0);
+    hud(addVignette(this, 0.5));
     // Postes verticales: un tileSprite que se mueve con la cámara
-    if (!this.textures.exists('poles')) {
-      const g = this.add.graphics();
-      g.fillStyle(0x9aa7bd); [30, 190, 350, 510].forEach(x => g.fillRect(x - 5, 0, 10, 120));
-      g.fillStyle(0x6c7a93); [30, 190, 350, 510].forEach(x => g.fillRect(x - 5, 0, 10, 6));
-      g.generateTexture('poles', W, 120); g.destroy();
-    }
-    this.poles = this.add.tileSprite(W / 2, H / 2, W, H, 'poles').setDepth(1).setScrollFactor(0).setAlpha(0.7);
+    this.poles = hud(addTile(this, W / 2, H / 2, W, H, 'poles')).setDepth(1).setAlpha(0.75);
   }
 
   drawHud() {
-    this.add.rectangle(W / 2, 55, W, 110, BRAND.navy).setScrollFactor(0).setDepth(19);
-    this.scoreText = this.add.text(20, 28, '0', { fontFamily: FONT, fontSize: '40px', fontStyle: 'bold', color: CSS.white }).setScrollFactor(0).setDepth(20);
-    this.heightText = this.add.text(20, 74, 'Piso 0', { fontFamily: FONT, fontSize: '18px', color: CSS.grey }).setScrollFactor(0).setDepth(20);
-    this.anchorText = this.add.text(W / 2 - 20, 48, 'SIN ANCLAR', { fontFamily: FONT, fontSize: '18px', fontStyle: 'bold', color: CSS.red }).setOrigin(0.5).setScrollFactor(0).setDepth(20);
+    hud(this.add.rectangle(W / 2, 55, W, 110, BRAND.navy)).setDepth(19);
+    this.scoreText = hud(this.add.text(20, 28, '0', { fontFamily: FONT, fontSize: '40px', fontStyle: '900', color: CSS.white }).setShadow(0, 3, 'rgba(0,0,0,0.5)', 4)).setDepth(20);
+    this.heightText = hud(this.add.text(20, 74, 'Piso 0', { fontFamily: FONT, fontSize: '18px', color: CSS.grey })).setDepth(20);
+    this.anchorText = hud(this.add.text(W / 2 - 20, 48, 'SIN ANCLAR', { fontFamily: FONT, fontSize: '18px', fontStyle: 'bold', color: CSS.red }).setOrigin(0.5)).setDepth(20);
     const bar = makeTopBar(this, { coins: false });
-    bar.exit.setScrollFactor(0);
-    makeHelpButton(this, '🪢 ALTURA', 'Toca la tabla a la que quieres saltar (solo el piso de arriba).\n\n⚠️ Tabla agrietada = se rompe.\n🟠 Anilla = toca ANCLAR para ir seguro durante ' + this.anchorRowsTotal + ' pisos.\n\nEl polvo sube: ¡no te pares!').setScrollFactor(0);
+    hud(bar.exit);
+    hud(makeHelpButton(this, '🪢 ALTURA', 'Toca la tabla a la que quieres saltar (solo el piso de arriba).\n\n⚠️ Tabla agrietada = se rompe.\n🟠 Anilla = toca ANCLAR para ir seguro durante ' + this.anchorRowsTotal + ' pisos.\n\nEl polvo sube: ¡no te pares!'));
 
     // Botón de anclar (aparece solo cuando hay anilla)
     this.anchorBtn = makeButton(this, W / 2, 890, 320, 64, '🔗 ANCLAR ARNÉS', BRAND.orange, () => this.tryAnchor(), 24);
-    this.anchorBtn.img.setScrollFactor(0).setDepth(20); this.anchorBtn.txt.setScrollFactor(0).setDepth(21);
+    hud(this.anchorBtn.img).setDepth(20); hud(this.anchorBtn.txt).setDepth(21);
     this.anchorBtn.img.setVisible(false); this.anchorBtn.txt.setVisible(false);
-    this.anchorProgress = this.add.graphics().setScrollFactor(0).setDepth(22);
-    this.dustWarn = this.add.text(W / 2, 140, '⚠️ ¡EL POLVO SE ACERCA!', { fontFamily: FONT, fontSize: '22px', fontStyle: 'bold', color: CSS.red, stroke: CSS.navy, strokeThickness: 5 }).setOrigin(0.5).setScrollFactor(0).setDepth(22).setVisible(false);
+    this.anchorProgress = hud(this.add.graphics()).setDepth(22);
+    this.dustWarn = hud(this.add.text(W / 2, 140, '⚠️ ¡EL POLVO SE ACERCA!', { fontFamily: FONT, fontSize: '22px', fontStyle: 'bold', color: CSS.red, stroke: CSS.navy, strokeThickness: 5 }).setOrigin(0.5)).setDepth(22).setVisible(false);
   }
 
   // ---------- Filas del andamio ----------
@@ -150,15 +116,15 @@ class AlturaScene extends Phaser.Scene {
 
     planks.forEach(p => {
       const x = this.lanesX[p.lane], y = this.rowY(r);
-      p.sprite = this.add.image(x, y, p.cracked ? 'plank_cracked' : 'plank').setOrigin(0.5, 0);
+      p.sprite = addImg(this, x, y, p.cracked ? 'plank_cracked' : 'plank').setOrigin(0.5, 0);
       p.sprite.setInteractive(new Phaser.Geom.Rectangle(-15, -70, 160, 110), Phaser.Geom.Rectangle.Contains);
       p.sprite.on('pointerdown', () => { if (this.row === r - 1) this.tryJump(p.lane, r); });
       this.rowLayer.add(p.sprite);
       objs.push(p.sprite);
       if (p.cracked) { p.warn = this.add.text(x + 45, y - 14, '⚠️', { fontSize: '16px' }).setOrigin(0.5).setDepth(3); objs.push(p.warn); }
       if (p.anchor) {
-        p.ring = this.add.image(x - 40, y - 26, 'anchor_ring').setDepth(3);
-        this.tweens.add({ targets: p.ring, scale: { from: 1, to: 1.15 }, duration: 500, yoyo: true, repeat: -1 });
+        p.ring = addImg(this, x - 40, y - 26, 'anchor_ring').setDepth(3);
+        this.tweens.add({ targets: p.ring, scale: { from: 1 / TEX, to: 1.15 / TEX }, duration: 500, yoyo: true, repeat: -1 });
         objs.push(p.ring);
       }
       if (p === coinPlank) { p.coin = coinImage(this, x, y - 40, 30).setDepth(3); objs.push(p.coin); }
@@ -281,9 +247,8 @@ class AlturaScene extends Phaser.Scene {
 
     // cámara sigue al jugador
     const target = this.player.y - 560;
-    const cam = this.cameras.main;
-    cam.scrollY += (target - cam.scrollY) * 0.1;
-    this.poles.tilePositionY = cam.scrollY;
+    setCamTop(this, camTop(this) + (target - camTop(this)) * 0.1);
+    this.poles.tilePositionY = camTop(this) * TEX;
 
     if (this.running) {
       // el polvo sube; más rápido cuanto más lejos esté del jugador
@@ -302,9 +267,11 @@ class AlturaScene extends Phaser.Scene {
     // dibujar el polvo
     this.dust.clear();
     const top = this.dangerY;
-    this.dust.fillStyle(0x5c6a85, 0.92); this.dust.fillRect(0, top, W, 2000);
-    this.dust.fillStyle(0x7d8aa3, 0.9);
-    for (let i = 0; i < 8; i++) this.dust.fillCircle(i * 76 + 20, top + Math.sin(time / 400 + i) * 10, 46);
+    this.dust.fillStyle(0x6b7890, 0.95); this.dust.fillRect(0, top + 20, W, 2000);
+    this.dust.fillStyle(0x8d9ab2, 0.9);
+    for (let i = 0; i < 8; i++) this.dust.fillCircle(i * 76 + 20, top + Math.sin(time / 400 + i) * 12, 48);
+    this.dust.fillStyle(0xa9b4c8, 0.6);
+    for (let i = 0; i < 6; i++) this.dust.fillCircle(i * 100 + 60, top - 10 + Math.cos(time / 500 + i * 2) * 14, 30);
 
     // cuerda de anclaje
     this.rope.clear();

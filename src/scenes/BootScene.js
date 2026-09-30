@@ -1,5 +1,5 @@
 // ============================================================
-//  BOOT — genera todas las texturas y pasa al menú
+//  BOOT — carga imágenes opcionales, genera texturas y pasa al menú
 // ============================================================
 
 class BootScene extends Phaser.Scene {
@@ -13,27 +13,32 @@ class BootScene extends Phaser.Scene {
   }
 
   create() {
+    hiDPI(this);
+
     // Operarios de pie con distintos chalecos
-    makeWorkerTexture(this, 'worker_orange', 0xf58220);
+    makeWorkerTexture(this, 'worker_orange', 0xeb5d1a);
     makeWorkerTexture(this, 'worker_yellow', 0xffc82e);
     makeWorkerTexture(this, 'worker_green',  0x3ddc84);
-    makeWorkerTexture(this, 'worker_harness', 0xf58220, { harness: true });
-    makeWorkerTexture(this, 'worker_vip', 0xffffff, { helmetColor: 0xffd700 });
+    makeWorkerTexture(this, 'worker_harness', 0xeb5d1a, { harness: true });
+    makeWorkerTexture(this, 'worker_vip', 0xf4f6f8, { helmetColor: 0xffd700 });
 
     // Operarios del modo Inspector: chaleco x protección puesta
     ['orange', 'yellow', 'green', 'blue'].forEach(v => {
-      const color = { orange: 0xf58220, yellow: 0xffc82e, green: 0x3ddc84, blue: 0x3a6fd8 }[v];
+      const color = { orange: 0xeb5d1a, yellow: 0xffc82e, green: 0x3ddc84, blue: 0x3a6fd8 }[v];
       ['none', 'ffp', 'semi', 'hood'].forEach(wear => makeWorkerTexture(this, 'insp_' + v + '_' + wear, color, { wear }));
     });
 
-    // Corredor (todas las combinaciones de equipo se generan bajo demanda en el modo Runner)
+    // Corredor (las combinaciones de equipo se generan bajo demanda en el modo Runner)
     makeRunnerTexture(this, 'runner_0', 0, {});
     makeRunnerTexture(this, 'runner_1', 1, {});
     makeRunnerTexture(this, 'runner_2', 2, {});
 
-    // Iconos de todos los productos
+    // Iconos de todos los productos y escenarios
     Object.keys(PRODUCTS).forEach(id => makeProductTexture(this, id));
-    makeSafecoinTexture(this);
+    makePlankTextures(this);
+    makeRunnerTextures(this);
+    makeStripesTexture(this);
+    if (!this.textures.exists('safecoin')) makeGenericTexture(this, 'safecoin', 'coin', BRAND.orange);
 
     // Bono de bienvenida
     if (!Save.get('welcomed', false)) {

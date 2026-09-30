@@ -11,7 +11,9 @@ class RunnerScene extends Phaser.Scene {
 
   create() {
     const C = RUNNER_CONFIG;
-    this.cameras.main.setBackgroundColor(0x24406e);
+    hiDPI(this);
+    addBackground(this, '#5b8ad0', '#24406e', '#1a2f52');
+    addVignette(this, 0.45);
     this.groundY = 720;
     this.px = 110;
     this.speed = C.speedStart;
@@ -33,11 +35,11 @@ class RunnerScene extends Phaser.Scene {
     this.makeTextures();
     this.drawBackground();
 
-    this.player = this.add.image(this.px, this.py, this.gearKey(0)).setOrigin(0.5, 1).setDepth(6);
+    this.player = addImg(this, this.px, this.py, this.gearKey(0), 1.2).setOrigin(0.5, 1).setDepth(6);
     this.drawHud();
 
     // Controles táctiles: mitad izquierda salta, derecha se agacha
-    this.input.on('pointerdown', p => { if (p.y < 110) return; if (p.x < W / 2) this.jump(); else this.slide(); });
+    this.input.on('pointerdown', p => { if (p.worldY < 110) return; if (p.worldX < W / 2) this.jump(); else this.slide(); });
     this.input.keyboard.on('keydown-UP', () => this.jump());
     this.input.keyboard.on('keydown-SPACE', () => this.jump());
     this.input.keyboard.on('keydown-DOWN', () => this.slide());
@@ -48,45 +50,19 @@ class RunnerScene extends Phaser.Scene {
   }
 
   // ---------- Texturas ----------
-  makeTextures() {
-    if (!this.textures.exists('rn_ground')) {
-      const g = this.add.graphics();
-      g.fillStyle(0x3b527a); g.fillRect(0, 0, 88, 240);
-      g.fillStyle(0x6c7a93); g.fillRect(0, 0, 88, 10);
-      g.fillStyle(0xffc82e); g.fillRect(0, 10, 44, 6); g.fillStyle(0x111111); g.fillRect(44, 10, 44, 6);
-      g.fillStyle(0x2f4468); g.fillRect(10, 40, 30, 20); g.fillRect(50, 90, 30, 20);
-      g.generateTexture('rn_ground', 88, 240); g.destroy();
-    }
-    if (!this.textures.exists('rn_city')) {
-      const g = this.add.graphics();
-      g.fillStyle(0x1c3560);
-      [[0, 120, 90, 300], [110, 60, 70, 360], [200, 160, 120, 260], [340, 90, 80, 330], [440, 140, 100, 280]].forEach(b => g.fillRect(b[0], 420 - b[3], b[2], b[3]));
-      g.fillStyle(0x2a4a7a);
-      for (let x = 10; x < 540; x += 30) for (let y = 130; y < 400; y += 40) if ((x + y) % 70 < 30) g.fillRect(x, y, 10, 14);
-      g.generateTexture('rn_city', 540, 420); g.destroy();
-    }
-    if (!this.textures.exists('rn_cone')) {
-      const g = this.add.graphics();
-      g.fillStyle(0xf58220); g.fillTriangle(24, 0, 0, 52, 48, 52);
-      g.fillStyle(0xffffff); g.fillRect(12, 26, 24, 8);
-      g.fillStyle(0x222222); g.fillRect(0, 50, 48, 6);
-      g.generateTexture('rn_cone', 48, 56); g.destroy();
-    }
-    if (!this.textures.exists('rn_beam')) {
-      const g = this.add.graphics();
-      g.fillStyle(0x6c7a93); g.fillRect(28, 0, 8, 100); g.fillRect(58, 0, 8, 100);
-      g.fillStyle(0xf58220); g.fillRect(0, 100, 94, 30);
-      g.fillStyle(0x111111); for (let i = 0; i < 4; i++) g.fillRect(i * 24 + 4, 100, 12, 30);
-      g.generateTexture('rn_beam', 94, 130); g.destroy();
-    }
-  }
+  makeTextures() { makeRunnerTextures(this); }
 
   drawBackground() {
-    this.city = this.add.tileSprite(W / 2, 470, W, 420, 'rn_city').setDepth(0).setAlpha(0.9);
-    this.ground = this.add.tileSprite(W / 2, this.groundY + 120, W, 240, 'rn_ground').setDepth(2);
+    this.city = addTile(this, W / 2, 470, W, 420, 'rn_city').setDepth(0).setAlpha(0.9);
+    this.ground = addTile(this, W / 2, this.groundY + 120, W, 240, 'rn_ground').setDepth(2);
     // crane
-    const g = this.add.graphics().setDepth(1);
-    g.fillStyle(0xffc82e); g.fillRect(470, 120, 10, 400); g.fillRect(200, 120, 300, 8);
+    const g = this.add.graphics().setDepth(1).setAlpha(0.85);
+    g.fillStyle(0xe0a800); g.fillRect(462, 130, 6, 600); g.fillRect(482, 130, 6, 600);
+    g.lineStyle(3, 0xe0a800);
+    for (let y = 130; y < 720; y += 24) { g.lineBetween(465, y, 485, y + 24); g.lineBetween(485, y, 465, y + 24); }
+    g.fillRect(180, 124, 330, 6); g.fillRect(180, 140, 330, 4);
+    for (let x = 184; x < 500; x += 22) g.lineBetween(x, 130, x + 22, 140);
+    g.fillStyle(0x6c7a93); g.fillRect(300, 144, 3, 90); g.fillRect(292, 234, 20, 14);
     // zonas táctiles
     this.add.text(W * 0.25, 900, '▲ SALTAR', { fontFamily: FONT, fontSize: '16px', fontStyle: 'bold', color: '#ffffff' }).setOrigin(0.5).setAlpha(0.35).setDepth(20);
     this.add.text(W * 0.75, 900, '▼ AGACHARSE', { fontFamily: FONT, fontSize: '16px', fontStyle: 'bold', color: '#ffffff' }).setOrigin(0.5).setAlpha(0.35).setDepth(20);
@@ -94,7 +70,7 @@ class RunnerScene extends Phaser.Scene {
   }
 
   drawHud() {
-    this.scoreText = this.add.text(20, 28, '0', { fontFamily: FONT, fontSize: '40px', fontStyle: 'bold', color: CSS.white }).setDepth(20);
+    this.scoreText = this.add.text(20, 28, '0', { fontFamily: FONT, fontSize: '40px', fontStyle: '900', color: CSS.white }).setDepth(20).setShadow(0, 3, 'rgba(0,0,0,0.5)', 4);
     this.distText = this.add.text(20, 74, '0 m', { fontFamily: FONT, fontSize: '18px', color: CSS.grey }).setDepth(20);
     // ranuras de EPI
     this.slots = {};
@@ -156,10 +132,10 @@ class RunnerScene extends Phaser.Scene {
     opts = opts || {};
     const o = { type, x, w: 48, objs: [], done: false };
     if (type === 'cone') {
-      o.w = 48; o.h = 56; o.spr = this.add.image(x, this.groundY, 'rn_cone').setOrigin(0.5, 1).setDepth(5); o.objs.push(o.spr);
+      o.w = 48; o.h = 56; o.spr = addImg(this, x, this.groundY, 'rn_cone').setOrigin(0.5, 1).setDepth(5); o.objs.push(o.spr);
     } else if (type === 'beam') {
       o.w = 94; o.top = this.groundY - 190; o.bottom = this.groundY - 60;
-      o.spr = this.add.image(x, o.top, 'rn_beam').setOrigin(0.5, 0).setDepth(5); o.objs.push(o.spr);
+      o.spr = addImg(this, x, o.top, 'rn_beam').setOrigin(0.5, 0).setDepth(5); o.objs.push(o.spr);
     } else if (type === 'gap') {
       o.w = opts.w;
       o.spr = this.add.rectangle(x, this.groundY - 2, o.w, 260, 0x0a1220).setOrigin(0.5, 0).setDepth(3); o.objs.push(o.spr);
@@ -199,8 +175,8 @@ class RunnerScene extends Phaser.Scene {
     this.speed = Math.min(C.speedMax, this.speed + C.speedGain * dt);
     const dx = this.speed * dt;
     this.distance += dx;
-    this.ground.tilePositionX += dx;
-    this.city.tilePositionX += dx * 0.25;
+    this.ground.tilePositionX += dx * TEX;
+    this.city.tilePositionX += dx * 0.25 * TEX;
 
     // física del jugador
     this.vy += C.gravity * dt;

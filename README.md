@@ -28,7 +28,8 @@ manifest.json           PWA (instalable en el móvil)
 icons/                  Iconos de la app
 lib/phaser.min.js       Motor Phaser 3.90 (incluido, sin dependencias externas)
 src/main.js             Configuración y arranque
-src/utils.js            Texturas dibujadas por código, sonido sintetizado, guardado, widgets
+src/utils.js            Sonido sintetizado, guardado, misiones, widgets, alta resolución
+src/art.js              Todos los gráficos dibujados por código (Canvas 2D, 2x)
 src/data/products.js    ← CATÁLOGO: productos, perks, tareas, misiones, textos, dificultad
 src/scenes/             Una escena por pantalla:
   BootScene.js            genera texturas
@@ -47,7 +48,7 @@ Para cambiar productos, precios, textos o dificultad basta con editar `src/data/
 
 ## Sustituir gráficos por fotos reales
 
-Todos los gráficos se dibujan por código, pero el juego está preparado para fotos reales:
+Todos los gráficos se dibujan por código (`src/art.js`), pero el juego está preparado para fotos reales:
 1. Sube la imagen a `assets/products/` (PNG con fondo transparente, ~200x220 px).
 2. En `src/data/assets.js` añade una línea: `nitqrolux: 'assets/products/nitqrolux.png',`
 3. Para el logo de Safetop (icono de Safecoin): `const LOGO_IMAGE = 'assets/logo.png';`

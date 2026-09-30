@@ -11,7 +11,9 @@ class InspectorScene extends Phaser.Scene {
 
   create() {
     const C = INSPECTOR_CONFIG;
-    this.cameras.main.setBackgroundColor(BRAND.navy);
+    hiDPI(this);
+    addBackground(this, '#0f1a2b', '#0f1a2b');
+    addVignette(this, 0.45);
     this.score = 0;
     this.round = 0;
     this.totalFound = 0;
@@ -31,26 +33,26 @@ class InspectorScene extends Phaser.Scene {
   }
 
   drawBackground() {
+    makeGradientTexture(this, 'in_sky', W, 750, '#3c62a0', '#1d3459');
+    this.add.image(W / 2, 485, 'in_sky').setDisplaySize(W, 750).setDepth(0);
     const g = this.add.graphics().setDepth(0);
-    // cielo y edificio en obra
-    g.fillStyle(0x24406e); g.fillRect(0, 110, W, 750);
     g.fillStyle(0x1a2f52); g.fillRect(0, 860, W, 100);
     // pilares y forjados
     g.fillStyle(0x3b527a);
     [70, 230, 390].forEach(x => g.fillRect(x, 140, 14, 720));
     [310, 480, 650, 820].forEach(y => g.fillRect(0, y, W, 12));
     // grúa
-    g.fillStyle(0xffc82e); g.fillRect(500, 120, 8, 740); g.fillRect(300, 120, 240, 8);
-    g.lineStyle(2, 0xffc82e); g.lineBetween(420, 128, 420, 200);
-    g.fillStyle(0x9aa7bd); g.fillRect(405, 200, 30, 20);
+    g.fillStyle(0xe0a800, 0.5); g.fillRect(522, 120, 5, 740); g.fillRect(300, 120, 230, 6);
+    g.lineStyle(2, 0xe0a800, 0.5); g.lineBetween(420, 126, 420, 200);
+    g.fillStyle(0x9aa7bd, 0.6); g.fillRect(405, 200, 30, 20);
     // franja HUD
     g.fillStyle(BRAND.navy); g.fillRect(0, 0, W, 110);
   }
 
   drawHud() {
-    this.scoreText = this.add.text(20, 28, '0', { fontFamily: FONT, fontSize: '40px', fontStyle: 'bold', color: CSS.white }).setDepth(20);
+    this.scoreText = this.add.text(20, 28, '0', { fontFamily: FONT, fontSize: '40px', fontStyle: '900', color: CSS.white }).setDepth(20).setShadow(0, 3, 'rgba(0,0,0,0.5)', 4);
     this.roundText = this.add.text(20, 74, 'Ronda 1', { fontFamily: FONT, fontSize: '18px', color: CSS.grey }).setDepth(20);
-    this.timerText = this.add.text(W / 2 - 30, 40, '30', { fontFamily: FONT, fontSize: '44px', fontStyle: 'bold', color: CSS.green }).setOrigin(0.5).setDepth(20);
+    this.timerText = this.add.text(W / 2 - 30, 40, '30', { fontFamily: FONT, fontSize: '44px', fontStyle: '900', color: CSS.green }).setOrigin(0.5).setDepth(20).setShadow(0, 3, 'rgba(0,0,0,0.5)', 4);
     this.foundText = this.add.text(W / 2 - 30, 80, '', { fontFamily: FONT, fontSize: '16px', fontStyle: 'bold', color: CSS.yellow }).setOrigin(0.5).setDepth(20);
     makeTopBar(this, { coins: false });
     makeHelpButton(this, '😷 INSPECTOR', 'Toca a los operarios que NO llevan la protección que exige su tarea.\n\n🪚 🧱 ☣️ Polvo → mascarilla FFP\n🎨 🧪 Gases → semimáscara con filtros\n⚡ Soldadura → capucha AIRFLOW\n📋 📏 ☕ No necesitan nada\n\nUna FFP no protege de gases.');
@@ -111,9 +113,10 @@ class InspectorScene extends Phaser.Scene {
 
   makeWorker(x, y, act, wear, isHazard) {
     const vest = Phaser.Utils.Array.GetRandom(['orange', 'yellow', 'green', 'blue']);
-    const sprite = this.add.image(x, y, 'insp_' + vest + '_' + wear).setOrigin(0.5, 1).setScale(0.95).setDepth(3);
+    const sprite = addImg(this, x, y, 'insp_' + vest + '_' + wear, 0.95).setOrigin(0.5, 1).setDepth(3);
     sprite.setInteractive(new Phaser.Geom.Rectangle(-10, -20, 92, 150), Phaser.Geom.Rectangle.Contains);
     const bubble = this.add.graphics().setDepth(4);
+    bubble.fillStyle(0x000000, 0.25); bubble.fillRoundedRect(x - 24, y - 164, 52, 40, 10);
     bubble.fillStyle(0xffffff); bubble.fillRoundedRect(x - 26, y - 168, 52, 40, 10); bubble.fillTriangle(x - 6, y - 130, x + 6, y - 130, x, y - 122);
     const emoji = this.add.text(x, y - 148, act.emoji, { fontSize: '26px' }).setOrigin(0.5).setDepth(5);
     const w = { sprite, act, wear, vest, isHazard, found: false, objs: [sprite, bubble, emoji] };

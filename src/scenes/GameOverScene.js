@@ -17,14 +17,16 @@ class GameOverScene extends Phaser.Scene {
     const coins = Wallet.reward(d.score, isRecord, d.coinMult);
     const missions = Missions.report(d.stats);
 
-    this.cameras.main.setBackgroundColor(BRAND.navy);
+    hiDPI(this);
+    addBackground(this, '#182a4a', '#0f1a2b', '#0a1220');
+    addVignette(this, 0.5);
 
     this.add.text(W / 2, 130, mode.emoji + ' ' + mode.title.toUpperCase(), { fontFamily: FONT, fontSize: '22px', fontStyle: 'bold', color: CSS.grey }).setOrigin(0.5);
     this.add.text(W / 2, 200, isRecord ? '🏆 ¡NUEVO RÉCORD!' : 'FIN DEL TURNO', {
       fontFamily: FONT, fontSize: '40px', fontStyle: 'bold', color: isRecord ? CSS.yellow : CSS.orange
     }).setOrigin(0.5);
 
-    const s = this.add.text(W / 2, 310, '0', { fontFamily: FONT, fontSize: '96px', fontStyle: 'bold', color: CSS.white }).setOrigin(0.5);
+    const s = this.add.text(W / 2, 310, '0', { fontFamily: FONT, fontSize: '96px', fontStyle: '900', color: CSS.white }).setOrigin(0.5).setShadow(0, 4, 'rgba(0,0,0,0.5)', 8);
     this.tweens.addCounter({ from: 0, to: d.score, duration: 800, ease: 'Quad.out', onUpdate: t => s.setText(Math.floor(t.getValue())) });
     this.add.text(W / 2, 375, 'puntos', { fontFamily: FONT, fontSize: '20px', color: CSS.grey }).setOrigin(0.5);
 
@@ -34,7 +36,8 @@ class GameOverScene extends Phaser.Scene {
 
     // Safecoins ganados
     const c = this.add.container(W / 2, 530);
-    const bg = this.add.graphics(); bg.fillStyle(BRAND.navy2); bg.fillRoundedRect(-170, -36, 340, 72, 18);
+    makePanelTexture(this, 'coins_panel', 340, 72, BRAND.navy2, 18);
+    const bg = addImg(this, 0, 0, 'coins_panel');
     const ic = coinImage(this, -120, 0, 40);
     const t = this.add.text(-85, 0, '+' + coins + ' Safecoins' + (isRecord ? '  (bono récord)' : ''), { fontFamily: FONT, fontSize: '20px', fontStyle: 'bold', color: CSS.yellow }).setOrigin(0, 0.5);
     c.add([bg, ic, t]).setScale(0);
@@ -47,7 +50,7 @@ class GameOverScene extends Phaser.Scene {
       const mt = this.add.text(W / 2, 650, lines, { fontFamily: FONT, fontSize: '15px', fontStyle: 'bold', color: CSS.green, align: 'center', wordWrap: { width: 460 } }).setOrigin(0.5);
       this.tweens.add({ targets: mt, scale: { from: 0, to: 1 }, duration: 400, delay: 1000, ease: 'Back.out', onStart: () => Sfx.level() });
     } else {
-      const w = this.add.image(W / 2, 660, 'worker_orange').setScale(0.8);
+      const w = addImg(this, W / 2, 660, 'worker_orange', 0.8);
       this.tweens.add({ targets: w, angle: { from: -4, to: 4 }, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     }
 
